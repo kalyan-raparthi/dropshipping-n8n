@@ -16,7 +16,7 @@ def home():
 def track():
     return render_template('track.html') 
 
-@app.route('/track_s')
+@app.route('/track-s')
 def seller_track():
     return render_template('track-s.html')
 
