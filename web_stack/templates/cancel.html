@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Parcel Cancellation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 400px; margin: auto; }
+        input, button { width: 100%; padding: 10px; margin: 8px 0; }
+        #result { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Request a Cancellation</h2>
+        <form id="cancelForm">
+            <input id="orderId" name="orderId" placeholder="Order ID" value="">
+            <input id="reason" name="reason" placeholder="Cancellation Reason" value="">
+            <button type="submit">Send Cancellation Request</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('cancelForm');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const orderId = document.getElementById('orderId').value;
+                const reason = document.getElementById('reason').value;
+                if (!orderId) {
+                    document.getElementById('result').textContent = 'Order ID is required.';
+                    return;
+                }
+                const params = new URLSearchParams({
+                    orderId: orderId,
+                    reason: reason,
+                    operationType: 'cancel',
+                    source: 'customer',
+                    userId: '12345'
+                });
+                fetch(`http://localhost:5678/webhook-test/data?${params.toString()}`, {
+                    method: 'GET'
+                })
+                .then(response => response.ok ? response.json() : Promise.reject())
+                .then(data => {
+                    document.getElementById('result').textContent = JSON.stringify(data);
+                })
+                .catch(() => {
+                    document.getElementById('result').textContent = 'Submission failed.';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

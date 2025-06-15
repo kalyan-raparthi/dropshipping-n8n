@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #fafbfc;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        form {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 24px 32px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        label {
+            font-size: 0.98em;
+            margin-bottom: 4px;
+            color: #444;
+        }
+        input[type="text"] {
+            padding: 8px 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 1em;
+            background: #f7f7f7;
+            transition: border 0.2s;
+        }
+        input[type="text"]:focus {
+            border-color: #0078d4;
+            outline: none;
+            background: #fff;
+        }
+        button[type="submit"] {
+            padding: 10px 0;
+            background: #0078d4;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+        button[type="submit"]:hover {
+            background: #005fa3;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const data = new FormData(form);
+                const params = new URLSearchParams(data).toString();
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', 'http://localhost:5678/webhook-test/data?' + params, true);
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        alert('Form submitted successfully!');
+                    } else {
+                        alert('Submission failed.');
+                    }
+                };
+                xhr.onerror = function() {
+                    alert('Submission failed.');
+                };
+                xhr.send();
+            });
+        });
+    </script>
+</head>
+<body>
+    <form action="">
+        <label for="operationType">Type of Operation</label>
+        <input type="text" id="operationType" name="operationType" value="new_order">
+
+        <label for="userId">id (using to match)</label>
+        <input type="text" id="userId" name="userId" value="12345">
+
+        <label for="orderId">Order ID</label>
+        <input type="text" id="orderId" name="orderId" value="ORD-20240601">
+
+        <label for="userid">userid</label>
+        <input type="text" id="userid" name="userid" value="user_abc">
+
+        <label for="product_id">Product ID</label>
+        <input type="text" id="product_id" name="product_id" value="PROD-001">
+
+        <label for="customerName">Customer Name</label>
+        <input type="text" id="customerName" name="customerName" value="Jane Doe">
+
+        <label for="orderDate">Order Date</label>
+        <input type="text" id="orderDate" name="orderDate" value="2024-06-01">
+
+        <label for="orderAmount">Order Amount</label>
+        <input type="text" id="orderAmount" name="orderAmount" value="99.99">
+
+        <label for="paymentType">paymentype</label>
+        <input type="text" id="paymentType" name="paymentType" value="Credit Card">
+
+        <label for="status">payment-status</label>
+        <input type="text" id="status" name="status" value="Pending">
+
+        <label for="itemDescription">Item Description</label>
+        <input type="text" id="itemDescription" name="itemDescription" value="Wireless Headphones">
+
+        <label for="shippingAddress">Shipping Address</label>
+        <input type="text" id="shippingAddress" name="shippingAddress" value="123 Main St, Springfield, USA">
+
+        <button type="submit">Send</button>
+    </form>
+</body>
+</html>
