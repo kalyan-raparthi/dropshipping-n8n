@@ -63,7 +63,6 @@
                 e.preventDefault();
                 const data = new FormData(form);
                 const params = new URLSearchParams(data).toString();
-                // Use XMLHttpRequest for a GET request
                 const xhr = new XMLHttpRequest();
                 xhr.open('GET', 'http://localhost:5678/webhook-test/data?' + params, true);
                 xhr.onload = function() {
@@ -95,6 +94,9 @@
         <label for="userid">userid</label>
         <input type="text" id="userid" name="userid" value="user_abc">
 
+        <label for="product_id">Product ID</label>
+        <input type="text" id="product_id" name="product_id" value="PROD-001">
+
         <label for="customerName">Customer Name</label>
         <input type="text" id="customerName" name="customerName" value="Jane Doe">
 
@@ -108,7 +110,7 @@
         <input type="text" id="paymentType" name="paymentType" value="Credit Card">
 
         <label for="status">payment-status</label>
-        <input type="text" id="status" name="status" value="Paid">
+        <input type="text" id="status" name="status" value="Pending">
 
         <label for="itemDescription">Item Description</label>
         <input type="text" id="itemDescription" name="itemDescription" value="Wireless Headphones">
