@@ -32,7 +32,8 @@
                 }
                 const params = new URLSearchParams({
                     orderId: orderId,
-                    operation: 'track'
+                    operationType: 'track',
+                    source: 'customer'
                 });
                 fetch(`http://localhost:5678/webhook-test/data?${params.toString()}`, {
                     method: 'GET'
