@@ -1,4 +1,4 @@
-![ss](./N8N/screenshot.png)
+![Cat Image]( "Cute Cat")
 
 # Dropshipping Workflow Documentation
 
