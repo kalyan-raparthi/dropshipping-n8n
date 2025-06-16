@@ -1,0 +1,1784 @@
+{
+  "name": "dropshipping",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "/data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1220,
+        660
+      ],
+      "id": "2570a7bd-1834-4e27-96ef-ca4a8839d101",
+      "name": "Webhook",
+      "webhookId": "26268fc6-6428-4582-bf41-04a9ce67cab1"
+    },
+    {
+      "parameters": {
+        "promptType": "=define",
+        "text": "=summerise this to send email for customer.\ndo not add subject.\ncompany name is: N8N TEST DROPSHIPPING\n\n{{ $node['adding_order'].json.fields['Order ID'] }}\n{{ $node['adding_order'].json.fields['Customer Name'] }}\n{{ $node['adding_order'].json.fields['Item Description'] }}\n\n{{ $node['adding_order'].json.fields['Order Date'] }}\n{{ $node['adding_order'].json.fields['Order Amount'] }}\n{{ $node['adding_order'].json.fields['Shipping Address'] }}\n{{ $node['adding_order'].json.fields.paymentype }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -340,
+        -240
+      ],
+      "id": "cbf8bda6-56b7-4b6a-815f-88a384e87aa4",
+      "name": "AI Agent",
+      "executeOnce": true,
+      "retryOnFail": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -252,
+        -20
+      ],
+      "id": "002acf7d-2816-40c7-bc65-3ab48e434f63",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Kl7o6sGiZZiGMWi7",
+          "name": "OpenAi account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appDt94P6ASQFzfTe",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblmdHvN3fsRaR6aN",
+          "mode": "list",
+          "cachedResultName": "user",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe/tblmdHvN3fsRaR6aN"
+        },
+        "filterByFormula": "=({User ID} = '{{ $('adding_order').item.json.fields.userid }}')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -560,
+        -140
+      ],
+      "id": "40c94df8-de1a-481e-9a12-92c42d9b8a2e",
+      "name": "user_details",
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "rlzbZDxsPh6sVWhd",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.query.operationType }}",
+                    "rightValue": "new_order",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "73f8c39f-bdc3-40a5-ac9e-a28ffdb9eeec"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4d05a4bf-e955-4eab-a371-f9e03097cd6c",
+                    "leftValue": "={{ $json.query.operationType }}",
+                    "rightValue": "track",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4dd33ae9-b456-4733-b900-aa1a52889691",
+                    "leftValue": "={{ $json.query.operationType }}",
+                    "rightValue": "cancel",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cf42443d-78f1-4af2-9875-a7df1286f125",
+                    "leftValue": "={{ $json.query.operationType }}",
+                    "rightValue": "ror",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1000,
+        639
+      ],
+      "id": "e81bc5b5-5b9e-4aa4-a100-6ed4bc068bf9",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('user_details').item.json.Email }}",
+        "subject": "oder details",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        36,
+        -140
+      ],
+      "id": "b7ef7a6d-ca1c-4756-bb94-7be6ed7f58c4",
+      "name": "customer-mailing",
+      "webhookId": "798ad930-8bba-4780-bdca-6facfa797bef",
+      "executeOnce": false,
+      "retryOnFail": false,
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "C82pE7FiOB4t7fPv",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "ORDER CANCELLED",
+        "emailType": "text",
+        "message": "your order is been cancelled",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -262,
+        960
+      ],
+      "id": "2e24cd70-648b-44e6-aa57-f0e6495a354f",
+      "name": "Gmail",
+      "webhookId": "7f00e082-a7bb-418e-8bb0-77a04d3b326d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "C82pE7FiOB4t7fPv",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.query.source }}",
+                    "rightValue": "customer",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "d5f0b968-25d2-439f-9006-84af52fb1bca"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "bfe83328-d731-430e-bfdd-3a6d4e5327b8",
+                    "leftValue": "={{ $json.query.source }}",
+                    "rightValue": "seller",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -780,
+        560
+      ],
+      "id": "615d9c10-893a-4f22-80a8-980f48d3698c",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appDt94P6ASQFzfTe",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbla7ZbrdK2RfIfWL",
+          "mode": "list",
+          "cachedResultName": "tracking",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe/tbla7ZbrdK2RfIfWL"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "={{ $json.query.location }}",
+            "oid": "={{ $json.query.orderId }}"
+          },
+          "matchingColumns": [
+            "oid"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "oid",
+              "displayName": "oid",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "user 2",
+              "displayName": "user 2",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "User ID (from user 2)",
+              "displayName": "User ID (from user 2)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Name (from user 2)",
+              "displayName": "Name (from user 2)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Email (from user 2)",
+              "displayName": "Email (from user 2)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Phone (from user 2)",
+              "displayName": "Phone (from user 2)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Address (from user 2)",
+              "displayName": "Address (from user 2)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "tracking (from user 2)",
+              "displayName": "tracking (from user 2)",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -560,
+        660
+      ],
+      "id": "eda0f8a2-d663-4afe-adf6-1be587485a20",
+      "name": "updating_parcel_location",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "rlzbZDxsPh6sVWhd",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appDt94P6ASQFzfTe",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbla7ZbrdK2RfIfWL",
+          "mode": "list",
+          "cachedResultName": "tracking",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe/tbla7ZbrdK2RfIfWL"
+        },
+        "filterByFormula": "=({oid}='{{ $json.query.orderId }}')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -560,
+        360
+      ],
+      "id": "0b616ac7-416a-40fd-974d-54e2d1493ae1",
+      "name": "fetching_parcel_location",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "rlzbZDxsPh6sVWhd",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appDt94P6ASQFzfTe",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblyADfAZZfTwJdKI",
+          "mode": "list",
+          "cachedResultName": "dropshiiping orders",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe/tblyADfAZZfTwJdKI"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.query.userId }}",
+            "Order ID": "={{ $json.query.orderId }}",
+            "Order Amount": "={{ $json.query.orderAmount }}",
+            "paymentype": "={{ $json.query.paymentType }}",
+            "Status": "={{ $json.query.status }}",
+            "Item Description": "={{ $json.query.itemDescription }}",
+            "product_id": "={{ $json.query.product_id }}",
+            "Shipping Address": "={{ $json.query.shippingAddress }}",
+            "payment-status": "={{ $json.query.status }}",
+            "Customer Name": "={{ $json.query.customerName }}",
+            "userid": "={{ $json.query.userId }}",
+            "Order Date": "={{ $json.query.orderDate }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true
+            },
+            {
+              "id": "Order ID",
+              "displayName": "Order ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "userid",
+              "displayName": "userid",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Customer Name",
+              "displayName": "Customer Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Order Date",
+              "displayName": "Order Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Order Amount",
+              "displayName": "Order Amount",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "paymentype",
+              "displayName": "paymentype",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "payment-status",
+              "displayName": "payment-status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Item Description",
+              "displayName": "Item Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Shipped",
+                  "value": "Shipped"
+                },
+                {
+                  "name": "Delivered",
+                  "value": "Delivered"
+                },
+                {
+                  "name": "Cancelled",
+                  "value": "Cancelled"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Shipping Address",
+              "displayName": "Shipping Address",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "product_id",
+              "displayName": "product_id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -780,
+        10
+      ],
+      "id": "4faffd65-3936-4b18-a464-d69637beda72",
+      "name": "adding_order",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "rlzbZDxsPh6sVWhd",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['email (from supplier_details)'] }}",
+        "subject": "NEW ORDER ",
+        "message": "={{ $('adding_order').item.json.fields[\"Order ID\"] }}\n{{ $('adding_order').item.json.fields[\"Customer Name\"] }}\n{{ $('adding_order').item.json.fields[\"Order Date\"] }}\n{{ $('adding_order').item.json.fields[\"Order Amount\"] }}\n{{ $('adding_order').item.json.fields[\"payment-status\"] }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        36,
+        160
+      ],
+      "id": "2e33ea1d-3825-4afe-94d9-360408ec76c7",
+      "name": "supplier_mail",
+      "webhookId": "1ffd3a70-72d7-4687-bce7-fae27b83d474",
+      "executeOnce": false,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "C82pE7FiOB4t7fPv",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## TRACKING",
+        "height": 580,
+        "width": 1140,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -892,
+        340
+      ],
+      "id": "8aaedc03-477d-4edd-8c5c-b15c282bb1b4",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## NEW ORDER",
+        "height": 660,
+        "width": 1140
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -892,
+        -340
+      ],
+      "id": "ff0d12a2-e3cc-46e5-8eed-622276f6e521",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json[\"Email (from user 2)\"][0] }}",
+        "subject": "SHIPMENT DETAILS",
+        "message": "=dear {{ $json[\"Name (from user 2)\"] }}\nyour parcel is at {{ $json.status }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -262,
+        360
+      ],
+      "id": "c8da3812-6e9c-4194-8edc-0b6fb1ef6f14",
+      "name": "send_tracking_details",
+      "webhookId": "d099bf7a-b2c4-4bbb-80ee-8dabee6735b1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "C82pE7FiOB4t7fPv",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appDt94P6ASQFzfTe",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblyADfAZZfTwJdKI",
+          "mode": "list",
+          "cachedResultName": "dropshiiping orders",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe/tblyADfAZZfTwJdKI"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Cancelled",
+            "Order ID": "={{ $json.query.orderId }}"
+          },
+          "matchingColumns": [
+            "Order ID"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Order ID",
+              "displayName": "Order ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "userid",
+              "displayName": "userid",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Customer Name",
+              "displayName": "Customer Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Order Date",
+              "displayName": "Order Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Order Amount",
+              "displayName": "Order Amount",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "paymentype",
+              "displayName": "paymentype",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "payment-status",
+              "displayName": "payment-status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Item Description",
+              "displayName": "Item Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Shipped",
+                  "value": "Shipped"
+                },
+                {
+                  "name": "Delivered",
+                  "value": "Delivered"
+                },
+                {
+                  "name": "Cancelled",
+                  "value": "Cancelled"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Shipping Address",
+              "displayName": "Shipping Address",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -780,
+        960
+      ],
+      "id": "0a44c58a-c7a0-44af-8834-aaddd0c08556",
+      "name": "cancel_update",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "rlzbZDxsPh6sVWhd",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "value": "appDt94P6ASQFzfTe",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblX2O05vOMawluCM",
+          "mode": "list",
+          "cachedResultName": "supplier_details",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe/tblX2O05vOMawluCM"
+        },
+        "id": "=",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -262,
+        560
+      ],
+      "id": "8432147d-a6af-452b-aa97-82f36c18c6e5",
+      "name": "Airtable1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "rlzbZDxsPh6sVWhd",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.fields['Email (from user 2)'][0] }}",
+        "subject": "SHIPMENT DETAILS",
+        "message": "=dear {{ $json[\"Name (from user 2)\"] }}\nyour parcel is at {{ $json.status }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -262,
+        760
+      ],
+      "id": "0c7a6bfc-b6e7-40b8-9910-dec77732b4c7",
+      "name": "send_tracking_details_on_update",
+      "webhookId": "d099bf7a-b2c4-4bbb-80ee-8dabee6735b1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "C82pE7FiOB4t7fPv",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.records[0].fields.email }}",
+        "subject": "shipment updatew",
+        "emailType": "text",
+        "message": "=your parcel is at : {{ $('updating_parcel_location').item.json.fields.status }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        36,
+        560
+      ],
+      "id": "366da9ea-930d-4307-9299-a35236c8e99f",
+      "name": "tracking_deatail_ondemand",
+      "webhookId": "e8df95b9-b0f3-4832-b43b-cc8af256ba39",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "C82pE7FiOB4t7fPv",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appDt94P6ASQFzfTe",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblmdHvN3fsRaR6aN",
+          "mode": "list",
+          "cachedResultName": "user",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe/tblmdHvN3fsRaR6aN"
+        },
+        "filterByFormula": "=({User ID} = '{{ $('Switch').item.json.query.userId }}')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -560,
+        960
+      ],
+      "id": "ee6597fa-adaa-4f52-9160-f45030840e78",
+      "name": "user_deatails",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "rlzbZDxsPh6sVWhd",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appDt94P6ASQFzfTe",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblEQMmM567KwqlY8",
+          "mode": "list",
+          "cachedResultName": "products",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe/tblEQMmM567KwqlY8"
+        },
+        "filterByFormula": "=({pid} = '{{ $('adding_order').item.json.fields.product_id }}')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -262,
+        160
+      ],
+      "id": "bf14f8d8-608e-4791-aed3-99b9e5b7759f",
+      "name": "Airtable2",
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "rlzbZDxsPh6sVWhd",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "months"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1220,
+        1620
+      ],
+      "id": "8ab73763-1c44-42d3-8bbc-3d11debcdcbc",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1220,
+        1780
+      ],
+      "id": "427cd642-2ffd-4d18-a9b7-dc9e52801bd5",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "I4HV6M7pedyBZjVs",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "categories": {
+          "categories": [
+            {
+              "category": "informational"
+            },
+            {
+              "category": "support"
+            },
+            {
+              "category": "feedback"
+            },
+            {
+              "category": "techinal"
+            },
+            {
+              "category": "suspious"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -1000,
+        1780
+      ],
+      "id": "3dcbd02b-67d7-40b1-9301-51f0069dac1b",
+      "name": "Text Classifier",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "for item in _input.all():\n  item.json.myNewField = 1\nreturn _input.all()"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -920,
+        1620
+      ],
+      "id": "c7535228-3de1-4ac9-8c9c-5251dda3903c",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOpenHuggingFaceInference",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        1960
+      ],
+      "id": "dcfda2d7-e81b-4b63-9efb-562479118935",
+      "name": "Hugging Face Inference Model",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appDt94P6ASQFzfTe",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblEQMmM567KwqlY8",
+          "mode": "list",
+          "cachedResultName": "products",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe/tblEQMmM567KwqlY8"
+        },
+        "filterByFormula": "=({pid} = '{{ $json.fields.product_id }}')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -560,
+        160
+      ],
+      "id": "88cec13e-bce2-4abf-99ee-558ac78d505d",
+      "name": "product_details",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "rlzbZDxsPh6sVWhd",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "kalyansacc@gmail.com",
+        "subject": "ORDER CANCELLED",
+        "emailType": "text",
+        "message": "your order is been cancelled",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -560,
+        1160
+      ],
+      "id": "9392a399-17bb-4f64-9ea2-de09708b8f4b",
+      "name": "return_and_refund_manager",
+      "webhookId": "7f00e082-a7bb-418e-8bb0-77a04d3b326d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "C82pE7FiOB4t7fPv",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appDt94P6ASQFzfTe",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblyADfAZZfTwJdKI",
+          "mode": "list",
+          "cachedResultName": "dropshiiping orders",
+          "cachedResultUrl": "https://airtable.com/appDt94P6ASQFzfTe/tblyADfAZZfTwJdKI"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Order Amount": "={{ $json.query.orderAmount }}",
+            "Order ID": "={{ $json.query.orderId }}",
+            "Customer Name": "={{ $json.query.customerName }}",
+            "Item Description": "={{ $json.query.itemDescription }}",
+            "payment-status": "={{ $json.query.status }}",
+            "paymentype": "={{ $json.query.paymentType }}",
+            "Shipping Address": "={{ $json.query.shippingAddress }}",
+            "Status": "Pending",
+            "id": "={{ $json.query.userId }}",
+            "Order Date": "={{ $json.query.orderDate }}",
+            "userid": "={{ $json.query.userId }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Order ID",
+              "displayName": "Order ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "userid",
+              "displayName": "userid",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Customer Name",
+              "displayName": "Customer Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Order Date",
+              "displayName": "Order Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Order Amount",
+              "displayName": "Order Amount",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "paymentype",
+              "displayName": "paymentype",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "payment-status",
+              "displayName": "payment-status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Item Description",
+              "displayName": "Item Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Shipped",
+                  "value": "Shipped"
+                },
+                {
+                  "name": "Delivered",
+                  "value": "Delivered"
+                },
+                {
+                  "name": "Cancelled",
+                  "value": "Cancelled"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Shipping Address",
+              "displayName": "Shipping Address",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -780,
+        1160
+      ],
+      "id": "38c85045-293c-4b90-b5f3-3fd3f2643099",
+      "name": "STATUS_FETCH",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "rlzbZDxsPh6sVWhd",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## CANCELLATION",
+        "height": 180,
+        "width": 1160,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        940
+      ],
+      "id": "fc22eaa2-444c-4e31-bbf8-d43f8a2b282e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## REFUND",
+        "height": 200,
+        "width": 1160
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        1140
+      ],
+      "id": "72f16ff3-f47d-4866-aedb-55957abbc042",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "customer-mailing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "user_details": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "adding_order",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "cancel_update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "STATUS_FETCH",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "fetching_parcel_location",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "updating_parcel_location",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "updating_parcel_location": {
+      "main": [
+        [
+          {
+            "node": "Airtable1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "send_tracking_details_on_update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "adding_order": {
+      "main": [
+        [
+          {
+            "node": "product_details",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "user_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fetching_parcel_location": {
+      "main": [
+        [
+          {
+            "node": "send_tracking_details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cancel_update": {
+      "main": [
+        [
+          {
+            "node": "user_deatails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable1": {
+      "main": [
+        [
+          {
+            "node": "tracking_deatail_ondemand",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tracking_deatail_ondemand": {
+      "main": [
+        []
+      ]
+    },
+    "user_deatails": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable2": {
+      "main": [
+        [
+          {
+            "node": "supplier_mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hugging Face Inference Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "product_details": {
+      "main": [
+        [
+          {
+            "node": "Airtable2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "return_and_refund_manager": {
+      "main": [
+        []
+      ]
+    },
+    "STATUS_FETCH": {
+      "main": [
+        [
+          {
+            "node": "return_and_refund_manager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b4ed6665-fec6-402c-a39e-74c72253bae3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ac12f3bc4d8458b6042e878addb62117719619b5f651893065c85d17c3e62312"
+  },
+  "id": "95084LxWz3qWUsvs",
+  "tags": []
+}
