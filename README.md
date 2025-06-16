@@ -1,3 +1,4 @@
+![ss](./N8N/screenshot.png)
 
 # Dropshipping Workflow Documentation
 
