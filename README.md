@@ -1,4 +1,4 @@
-![Cat Image]( https://github.com/kalyan-raparthi/dropshipping-n8n/blob/main/N8N/dropshippnig.png "Cute Cat")
+![ss]( https://github.com/kalyan-raparthi/dropshipping-n8n/blob/main/N8N/dropshippnig.png "screen shot of workflow")
 
 # Dropshipping Workflow Documentation
 
