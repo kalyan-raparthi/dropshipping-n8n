@@ -105,5 +105,3 @@ The workflow manages:
 - **Sticky Notes**: Used throughout the workflow for section labeling and documentation.
 
 ---
-
-**End of Documentation**
